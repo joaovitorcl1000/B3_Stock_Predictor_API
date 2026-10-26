@@ -3,6 +3,9 @@ Etapa de Aquisição e Engenharia de Features (yfinance)
 Baixamos o histórico das 5 principais ações da B3 usando o yahoo finance (que é aberto), calculamos volatilidades 
 realizadas em várias escalas e o alvo de volatilidade futura
 e salvamos o dataset processado localmente na pasta data/ usando caminhos relativos.
+
+Rodar a partir da raiz do projeto:
+    python -m scripts.data
 """
 
 from pathlib import Path

@@ -1,0 +1,192 @@
+{
+    "alvo": "log da volatilidade diária dos próximos 21 pregões",
+    "divisao": {
+        "treino": {
+            "inicio": "2016-10-21",
+            "fim": "2023-08-29",
+            "linhas": 8535
+        },
+        "validacao": {
+            "inicio": "2023-09-29",
+            "fim": "2025-02-21",
+            "linhas": 1745
+        },
+        "teste": {
+            "inicio": "2025-03-27",
+            "fim": "2026-09-18",
+            "linhas": 1855
+        }
+    },
+    "hiperparametros": {
+        "epochs": 5000,
+        "hidden_layer_sizes": [
+            32,
+            16
+        ],
+        "lr": 0.001,
+        "random_state": 42,
+        "weight_decay": 0.03
+    },
+    "grid_validacao": [
+        {
+            "camadas": [
+                8,
+                4
+            ],
+            "weight_decay": 0.01,
+            "mse_validacao": 0.1598391526426757
+        },
+        {
+            "camadas": [
+                8,
+                4
+            ],
+            "weight_decay": 0.03,
+            "mse_validacao": 0.13934039050696592
+        },
+        {
+            "camadas": [
+                8,
+                4
+            ],
+            "weight_decay": 0.1,
+            "mse_validacao": 0.14188766454531898
+        },
+        {
+            "camadas": [
+                8,
+                4
+            ],
+            "weight_decay": 0.3,
+            "mse_validacao": 0.16090148486219533
+        },
+        {
+            "camadas": [
+                16,
+                8
+            ],
+            "weight_decay": 0.01,
+            "mse_validacao": 0.1467122442997284
+        },
+        {
+            "camadas": [
+                16,
+                8
+            ],
+            "weight_decay": 0.03,
+            "mse_validacao": 0.13740448624136203
+        },
+        {
+            "camadas": [
+                16,
+                8
+            ],
+            "weight_decay": 0.1,
+            "mse_validacao": 0.1388079004102171
+        },
+        {
+            "camadas": [
+                16,
+                8
+            ],
+            "weight_decay": 0.3,
+            "mse_validacao": 0.15427625632644404
+        },
+        {
+            "camadas": [
+                32,
+                16
+            ],
+            "weight_decay": 0.01,
+            "mse_validacao": 0.14521940686057133
+        },
+        {
+            "camadas": [
+                32,
+                16
+            ],
+            "weight_decay": 0.03,
+            "mse_validacao": 0.1366483591322194
+        },
+        {
+            "camadas": [
+                32,
+                16
+            ],
+            "weight_decay": 0.1,
+            "mse_validacao": 0.13740316152437626
+        },
+        {
+            "camadas": [
+                32,
+                16
+            ],
+            "weight_decay": 0.3,
+            "mse_validacao": 0.15058290044829947
+        },
+        {
+            "camadas": [
+                16,
+                16,
+                8
+            ],
+            "weight_decay": 0.01,
+            "mse_validacao": 0.15291514004257595
+        },
+        {
+            "camadas": [
+                16,
+                16,
+                8
+            ],
+            "weight_decay": 0.03,
+            "mse_validacao": 0.13819236193792014
+        },
+        {
+            "camadas": [
+                16,
+                16,
+                8
+            ],
+            "weight_decay": 0.1,
+            "mse_validacao": 0.14074565915470932
+        },
+        {
+            "camadas": [
+                16,
+                16,
+                8
+            ],
+            "weight_decay": 0.3,
+            "mse_validacao": 0.18025907020192855
+        }
+    ],
+    "teste": {
+        "rede": {
+            "mse": 0.10010419141642458,
+            "mae": 0.2448143751306323,
+            "r2": -0.07316872498344873,
+            "skill_vs_persistencia": 0.3126746509947884,
+            "erro_relativo_mediano": 0.20286308924126617
+        },
+        "persistencia": {
+            "mse": 0.14564309545880805,
+            "mae": 0.2983579033097148,
+            "r2": -0.5613693377331144,
+            "skill_vs_persistencia": 0.0,
+            "erro_relativo_mediano": 0.23096785122774732
+        },
+        "linear_har": {
+            "mse": 0.10182827769942146,
+            "mae": 0.2454818466613726,
+            "r2": -0.0916518219637581,
+            "skill_vs_persistencia": 0.30083690285049347,
+            "erro_relativo_mediano": 0.19902879678520224
+        }
+    },
+    "intervalo_90": {
+        "k": 0.5888362808979353,
+        "fator": 1.8018903006638318,
+        "cobertura_teste": 0.922911051212938
+    }
+}

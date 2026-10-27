@@ -10,11 +10,54 @@ API REST que estima o **risco do próximo mês** para cinco ações de alta liqu
 
 Quem investe numa ação precisa saber, antes de tudo, **quanto ela pode oscilar**. Essa informação é usada para dimensionar posições, definir limites de perda e comparar ativos.
 
-Prever **para onde** o preço vai (o retorno) é extremamente difícil: em testes iniciais deste projeto, nenhum modelo superou a simples média histórica. Já a **volatilidade** é previsível, porque períodos agitados tendem a ser seguidos por períodos agitados. Por isso o modelo prevê a volatilidade, e a API a converte em medidas de risco:
+Prever **para onde** o preço vai (o retorno) é extremamente difícil: em testes iniciais deste projeto, nenhum modelo superou a simples média histórica. Já a **volatilidade** é previsível, porque períodos agitados tendem a ser seguidos por períodos agitados. Por isso, uma rede neural prevê a volatilidade do próximo mês e, a partir dela, a API informa ao usuário, para uma das ações analisadas e um valor investido, a faixa de preço provável e a perda máxima esperada (VaR).
 
-- **volatilidade prevista** para o próximo mês, com intervalo de 90%;
-- **faixa de preço** provável ao fim do mês (90%);
-- **VaR de 95%**: a perda, em reais, que só deve ser superada em 1 de cada 20 meses.
+### Modelo Matemático
+
+O yfinance nos fornece o preço de fechamento da ação no período $t$, denotado por $P(t)$. Definimos o retorno logarítmico diário como:
+
+$$R(t) := \ln\left(\frac{P(t)}{P(t-1)}\right).$$
+
+Como a direção do preço é ruidosa, o modelo é treinado para prever a **volatilidade**, que é a raiz quadrada da variância. A variância diária realizada para um horizonte de $N$ pregões (ex: $N=21$) é a média dos quadrados dos retornos nesse período:
+
+$$\sigma^2_{\text{fut}}(t) = \frac{1}{N} \sum_{i=1}^{N} R(t+i)^2.$$
+No código, assumimos a média diária dos retornos como próxima de zero. 
+
+A volatilidade de Parkinson utiliza as cotações máxima e mínima atingidas durante o pregão, fornecendo um estimador mais eficiente para a variância do que o baseado apenas nos preços de fechamento. Sejam $H(t)$ o preço máximo (High) e $L(t)$ o preço mínimo (Low) da ação no dia $t$. A variância de Parkinson diária é definida matematicamente como:
+
+$$\sigma_P^2(t) = \frac{\left[ \ln\left(\frac{H(t)}{L(t)}\right) \right]^2}{4 \ln(2)}.$$
+
+O alvo $y$ da rede neural é o logaritmo da volatilidade diária dos **próximos** $N = 21$ pregões:
+
+$$y(t) = \frac{1}{2} \ln \sigma^2_{\text{fut}}(t) = \ln \sigma_{\text{fut}}(t).$$
+
+As features $\vec{x}$ usam apenas o **passado**: o ticker do ativo e as volatilidades dos últimos $w$ pregões, com $w \in \{5, 21, 63\}$ (semana, mês e trimestre). Para cada janela, calculamos duas estimativas: uma pelos retornos de fechamento e outra pela variância de Parkinson, que usa as máximas e mínimas do dia:
+
+$$\sigma^2_w(t) = \frac{1}{w} \sum_{i=0}^{w-1} R(t-i)^2, \qquad \sigma^2_{P,w}(t) = \frac{1}{w} \sum_{i=0}^{w-1} \sigma^2_P(t-i).$$
+
+Assim como o alvo, todas as volatilidades entram na rede em escala logarítmica:
+
+$$\vec{x}(t) = \Big( \textrm{ticker},\ \ln \sigma_5,\ \ln \sigma_{21},\ \ln \sigma_{63},\ \ln \sigma_{P,5},\ \ln \sigma_{P,21},\ \ln \sigma_{P,63} \Big).$$
+
+Seja $\hat{y}$ a previsão da rede neural e $P(t)$ o último preço conhecido. A API converte a saída do modelo para medidas de risco:
+
+  - **Volatilidade Prevista:** Revertemos o logaritmo para obter a volatilidade diária esperada:
+  $$ \hat{\sigma} = \exp(\hat{y}) $$
+  
+  - **Intervalo da Volatilidade (90\%):** Utilizando o quantil de erro absoluto empírico $k$ (extraído do dataset de validação), o intervalo de confiança para a volatilidade é:
+
+    $$\ln|y - \hat{y}| \leq k \implies \sigma \in \left[ \hat{\sigma}\exp(-k), \; \hat{\sigma}\exp(k) \right], \quad \textrm{em 90\% das vezes}$$
+
+    Em 90% das vezes, o erro que a minha rede neural comete (para mais ou para menos) não ultrapassa o valor de $k$.
+
+  - **Faixa de Preço (90\%):** Projetando os preços para o fim do mês ($N=21$), escalamos a volatilidade diária para o período ($\hat{\sigma}_N = \hat{\sigma}\sqrt{N}$) e a média histórica diária ($\mu_N = \mu N$, no entanto tomamos $\mu \approx 0$). Usando o Z-score de $1.645$ para 90\% de confiança em uma distribuição log-normal:
+
+  $$ P_{\text{min, max}} = P(t) \exp\left( \mu_N \pm 1.645 \cdot \hat{\sigma}\sqrt{N} \right) $$
+
+  - **VaR de 95\% (Value at Risk):** Foca na cauda inferior de 5\% de probabilidade. O pior retorno esperado em 21 dias é:
+    $$ R_{\text{pior}} = \mu_N - 1.645 \cdot \hat{\sigma}\sqrt{N} $$
+    Para um capital investido $C_0$, a perda máxima financeira (VaR), que só deve ser superada em 1 a cada 20 meses, é:
+    $$ \text{VaR} = C_0 \left( 1 - \exp(R_{\text{pior}}) \right) $$
 
 Ações cobertas: `PETR4.SA` (Petrobras), `VALE3.SA` (Vale), `ITUB4.SA` (Itaú Unibanco), `BBDC4.SA` (Bradesco) e `WEGE3.SA` (WEG).
 

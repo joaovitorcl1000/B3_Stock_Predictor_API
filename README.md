@@ -158,6 +158,7 @@ Todas as métricas, incluindo a grade completa, estão em `models/metrics.json`.
 | pandas | 3.1.0 | Manipulação de dados |
 | NumPy | 2.4.6 | Cálculos numéricos |
 | yfinance | 1.7.0 | Download dos dados |
+| requests | 2.34.2 | Cliente de exemplo (`scripts/exemplo_cliente.py`) |
 
 ---
 
@@ -285,6 +286,15 @@ Exemplo de resposta 400:
 
 As fórmulas supõem retorno médio zero e preço com distribuição lognormal. Na prática, retornos têm caudas mais pesadas que a normal, então o VaR tende a ser um pouco otimista em meses extremos.
 
+
+### Cliente de exemplo
+
+Com a API rodando, este script mostra como outra aplicação consome o `/predict`:
+
+```bash
+python scripts/exemplo_cliente.py
+```
+
 ---
 
 ## 7. Estrutura do projeto
@@ -300,6 +310,7 @@ As fórmulas supõem retorno médio zero e preço com distribuição lognormal. 
 ├── scripts/
 │   ├── data.py          # aquisição de dados e features
 │   └── train_pipeline.py# treino, avaliação e serialização
+│   ├── exemplo_cliente.py # exemplo de consumo da API
 ├── data/                # dataset bruto, features e resumo por ação
 ├── models/              # modelo treinado (.joblib) e métricas (.json)
 └── requirements.txt
@@ -329,6 +340,7 @@ O projeto seguiu o GitFlow: a `main` recebe só a versão final; a `develop` int
 | `feature/api-endpoints` | Rotas e lifespan |
 | `docs/readme` | README e correções de formatação |
 | `docs/formulacao-matematica` | Formulação matemática no README |
+| `feature/exemplo-cliente` | Cliente de exemplo para consumir a API |
 
 ---
 

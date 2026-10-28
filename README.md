@@ -144,6 +144,8 @@ Todas as métricas, incluindo a grade completa, estão em `models/metrics.json`.
 
 ## 4. Tecnologias utilizadas
 
+**Requisito:** Python 3.11 ou superior (numpy, pandas e scikit-learn nas versões fixadas exigem 3.11+). Verifique com `python3 --version`.
+
 | Biblioteca | Versão | Uso |
 |---|---|---|
 | Python | 3.11 | |
@@ -325,11 +327,12 @@ O projeto seguiu o GitFlow: a `main` recebe só a versão final; a `develop` int
 | `feature/api-schemas` | Contratos Pydantic |
 | `feature/api-services` | Camada de serviço |
 | `feature/api-endpoints` | Rotas e lifespan |
-| `docs/readme` | Este README |
+| `docs/readme` | README e correções de formatação |
+| `docs/formulacao-matematica` | Formulação matemática no README |
 
 ---
 
 ## 9. Evidências
 
-- **Vídeo de apresentação:** 
+- **Vídeo de apresentação:** https://drive.google.com/file/d/1YzUTWwt06wy0K7DNwSFexm7JudcmE3Vx/view?usp=sharing
 - **Quadro Kanban (Trello):** https://trello.com/b/20n2Qzpn/b3stockpredictorapi

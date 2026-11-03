@@ -344,7 +344,23 @@ O projeto seguiu o GitFlow: a `main` recebe só a versão final; a `develop` int
 
 ---
 
-## 9. Evidências
+## 9. Possíveis melhorias
+
+### Modelo e risco
+
+- **Validação do VaR (backtest):** contar, no teste, em quantos meses a perda real superou o VaR previsto (deveria ser cerca de 5%), com um teste formal como o de Kupiec.
+- **Combinação de modelos:** a média das previsões da rede e do HAR costuma superar as duas isoladamente.
+- **Variáveis de mercado:** incluir a volatilidade do Ibovespa, do dólar e o VIX como features.
+- **Carteira de mínima variância:** com as volatilidades previstas e as correlações entre as ações, a API poderia sugerir a distribuição de um valor entre os cinco ativos (Markowitz).
+
+### Engenharia
+
+- **Atualização dos dados:** o estado atual de cada ação é o do último pregão do dataset; uma rotina periódica poderia baixar os dados novos e retreinar o modelo.
+- **Docker:** empacotar Python e dependências numa imagem, para rodar igual em qualquer máquina, independentemente da versão do Python instalada.
+- **Rastreamento de experimentos:** registrar o grid de hiperparâmetros e as métricas no MLflow, em vez de só no `metrics.json`.
+- **Versão do modelo no `/health`:** informar a data do treino e a versão do artefato carregado.
+
+## 10. Evidências
 
 - **Vídeo de apresentação:** https://drive.google.com/file/d/1YzUTWwt06wy0K7DNwSFexm7JudcmE3Vx/view?usp=sharing
 - **Quadro Kanban (Trello):** https://trello.com/b/20n2Qzpn/b3stockpredictorapi

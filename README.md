@@ -362,5 +362,5 @@ O projeto seguiu o GitFlow: a `main` recebe só a versão final; a `develop` int
 
 ## 10. Evidências
 
-- **Vídeo de apresentação:** https://drive.google.com/file/d/1YzUTWwt06wy0K7DNwSFexm7JudcmE3Vx/view?usp=sharing
+- **Vídeo de apresentação:** https://drive.google.com/file/d/1W0PkJ6FtJ0wt9Ht4dTHrKUhrMAmCgvuR/view?usp=drive_link
 - **Quadro Kanban (Trello):** https://trello.com/b/20n2Qzpn/b3stockpredictorapi
